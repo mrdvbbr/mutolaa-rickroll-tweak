@@ -1,1 +1,1 @@
-{ Filter = { Bundles = ( "uz.mutolaa.commercial.mutolaa" ); }; }
+{ Filter = { Bundles = ( "uz.mutolaa.commercial.mutolaa", "uz.mutolaa.rickroll.mutolaa" ); }; }
