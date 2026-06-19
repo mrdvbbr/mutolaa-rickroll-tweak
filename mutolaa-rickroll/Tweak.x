@@ -1,34 +1,47 @@
-/* How to Hook with Logos
-Hooks are written with syntax similar to that of an Objective-C @implementation.
-You don't need to #include <substrate.h>, it will be done automatically, as will
-the generation of a class list and an automatic constructor.
+#import <Foundation/Foundation.h>
 
-%hook ClassName
+static NSString *const MutolaaAdsHost = @"cdn-minio.mutolaa.com";
+static NSString *const MutolaaAdsPathPrefix = @"/media/ads/";
+static NSString *const RickrollURL =
+    @"https://www.myinstants.com/media/sounds/rick-rolled-meme-aetrim1602054550919.mp3";
 
-// Hooking a class method
-+ (id)sharedInstance {
-	return %orig;
+static BOOL IsMutolaaAudioAdURL(NSString *value) {
+    if (value.length == 0) {
+        return NO;
+    }
+
+    NSString *lowercaseValue = value.lowercaseString;
+    NSString *expectedPrefix =
+        [NSString stringWithFormat:@"https://%@%@", MutolaaAdsHost,
+                                   MutolaaAdsPathPrefix];
+    NSString *URLWithoutQuery =
+        [lowercaseValue componentsSeparatedByCharactersInSet:
+                            [NSCharacterSet
+                                characterSetWithCharactersInString:@"?#"]]
+            .firstObject;
+
+    return [lowercaseValue hasPrefix:expectedPrefix] &&
+           [URLWithoutQuery hasSuffix:@".mp3"];
 }
 
-// Hooking an instance method with an argument.
-- (void)messageName:(int)argument {
-	%log; // Write a message about this call, including its class, name and arguments, to the system log.
+static NSString *ReplaceMutolaaAudioAdURL(NSString *value) {
+    if (!IsMutolaaAudioAdURL(value)) {
+        return value;
+    }
 
-	%orig; // Call through to the original function with its original arguments.
-	%orig(nil); // Call through to the original function with a custom argument.
-
-	// If you use %orig(), you MUST supply all arguments (except for self and _cmd, the automatically generated ones.)
+    NSLog(@"[MutolaaRickroll] Replacing %@ with %@", value, RickrollURL);
+    return RickrollURL;
 }
 
-// Hooking an instance method with no arguments.
-- (id)noArguments {
-	%log;
-	id awesome = %orig;
-	[awesome doSomethingElse];
+%hook NSURL
 
-	return awesome;
++ (instancetype)URLWithString:(NSString *)URLString {
+    return %orig(ReplaceMutolaaAudioAdURL(URLString));
 }
 
-// Always make sure you clean up after yourself; Not doing so could have grave consequences!
++ (instancetype)URLWithString:(NSString *)URLString
+                relativeToURL:(NSURL *)baseURL {
+    return %orig(ReplaceMutolaaAudioAdURL(URLString), baseURL);
+}
+
 %end
-*/

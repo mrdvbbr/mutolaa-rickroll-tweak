@@ -1,8 +1,8 @@
 Package: com.bbr.rickroll.mutolaa
 Name: mutolaa-rickroll
-Version: 0.0.1
+Version: 1.0.0
 Architecture: iphoneos-arm
-Description: An awesome MobileSubstrate tweak!
+Description: Replaces Mutolaa audio advertisements with a short Rickroll.
 Maintainer: Boboor
 Author: Boboor
 Section: Tweaks
