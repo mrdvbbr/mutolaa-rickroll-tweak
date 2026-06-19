@@ -1,0 +1,9 @@
+Package: com.bbr.rickroll.mutolaa
+Name: mutolaa-rickroll
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: An awesome MobileSubstrate tweak!
+Maintainer: Boboor
+Author: Boboor
+Section: Tweaks
+Depends: mobilesubstrate (>= 0.9.5000)
